@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>
+  �}�C�L�����o�X
+</title>
+<script src = "jquery-2.2.0.min.js"></script>
+
+<script>
+var drawFlag = false;
+var oldX = 0;
+var oldY = 0;
+window.addEventListener("load", function(){
+    var can = document.getElementById("myCanvas");
+    can.addEventListener("mousemove", draw, true);
+    can.addEventListener("mousedown", function(e){
+    	e.preventDefault();
+        drawFlag = true;
+        oldX = e.clientX - can.getBoundingClientRect().left;
+        oldY = e.clientY - can.getBoundingClientRect().top;
+    }, false);
+    can.addEventListener("mouseup", function(e){
+    	e.preventDefault();
+        drawFlag = false;
+    }, false);
+}, true);
+// �`��
+function draw(e){
+	e.preventDefault();
+	var can = document.getElementById("myCanvas");
+    if (!drawFlag) return;
+    var x = e.clientX - can.getBoundingClientRect().left;
+    var y = e.clientY - can.getBoundingClientRect().top;
+    var can = document.getElementById("myCanvas");
+    var context = can.getContext("2d");
+    context.strokeStyle = "rgba(255,0,0,1)";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(oldX, oldY);
+    context.lineTo(x, y);
+    context.stroke();
+    context.closePath();
+    oldX = x;
+    oldY = y;
+}
+
+function resolve_address(e){
+	var address = document.getElementById("address");
+	$.ajax({
+  type: "GET",
+  url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(address.value) +"&sensor=false",
+  dataType: "json"
+}).done(function(data){
+$("#maps").attr('src', 'https://maps.googleapis.com/maps/api/staticmap?center='+ data.results[0].geometry.location.lat +','+ data.results[0].geometry.location.lng +' &zoom=10&size=640x480&path=weight:3%7Ccolor:blue%7Cenc:aofcFz_bhVJ[n@ZpAp@t@b@uA`FuAzEoCdJiDpLs@VM@y@s@oBcBkAw@cCoAuBu@eEaAiAa@iAi@w@a@o@g@g@k@e@u@uAaCc@i@w@y@eAo@i@UaBc@kAGo@@]JyKA}EC{G?q@?IGKCeGA{CAyCAyEAwEBaFAkJ?yGEyAIiLAiB?{@BcBJ}@@aBGwBEo@A@j@BjBFTHjEl@fOD`C?|@RARAJERWPL@FE^S`AI`A&key=AIzaSyCGKQzO07D2IeHu7OYkaSNHquWVtK_bKb8');
+//alert(data.results[0].geometry.location.lat)
+});
+
+	//alert("https://maps.googleapis.com/maps/api/geocode/json?address=" + address.value +"&sensor=false");
+
+}
+
+function zoomin(e){
+	var address = document.getElementById("address");
+	var zoom = document.getElementById("zoom");
+	$.ajax({
+  type: "GET",
+  url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(address.value) +"&sensor=false",
+  dataType: "json"
+}).done(function(data){
+$("#maps").attr('src', 'https://maps.googleapis.com/maps/api/staticmap?center='+ data.results[0].geometry.location.lat +','+ data.results[0].geometry.location.lng +' &zoom='+ zoom.value +' &size=640x480&path=weight:3%7Ccolor:blue%7Cenc:aofcFz_bhVJ[n@ZpAp@t@b@uA`FuAzEoCdJiDpLs@VM@y@s@oBcBkAw@cCoAuBu@eEaAiAa@iAi@w@a@o@g@g@k@e@u@uAaCc@i@w@y@eAo@i@UaBc@kAGo@@]JyKA}EC{G?q@?IGKCeGA{CAyCAyEAwEBaFAkJ?yGEyAIiLAiB?{@BcBJ}@@aBGwBEo@A@j@BjBFTHjEl@fOD`C?|@RARAJERWPL@FE^S`AI`A&key=AIzaSyCGKQzO07D2IeHu7OYkaSNHquWVtK_bKb8');
+//alert(data.results[0].geometry.location.lat)
+});
+
+}
+</script>
+</head>
+
+<body>
+<input id = "address" type = "text" width = "60" >
+<input type = "button" value = "�ݒ�" onclick = "resolve_address()">
+<input id = "zoom" type = "text" width = "5">
+<input type = "button" value = "�Y�[��" onclick = "zoomin()">
+<br><br>
+
+<image
+id = "maps"
+style = "position: absolute"
+src = "https://maps.googleapis.com/maps/api/staticmap?center=500,500&zoom=10&size=640x480&path=weight:3%7Ccolor:blue%7Cenc:aofcFz_bhVJ[n@ZpAp@t@b@uA`FuAzEoCdJiDpLs@VM@y@s@oBcBkAw@cCoAuBu@eEaAiAa@iAi@w@a@o@g@g@k@e@u@uAaCc@i@w@y@eAo@i@UaBc@kAGo@@]JyKA}EC{G?q@?IGKCeGA{CAyCAyEAwEBaFAkJ?yGEyAIiLAiB?{@BcBJ}@@aBGwBEo@A@j@BjBFTHjEl@fOD`C?|@RARAJERWPL@FE^S`AI`A&key=AIzaSyCGKQzO07D2IeHu7OYkaSNHquWVtK_bKb8">
+
+<canvas
+style = "position: absolute"
+id = "myCanvas" width = "640" height = "480" style = "border:black solid 1px"></canvas>
+
+
+</body>
+</html>
